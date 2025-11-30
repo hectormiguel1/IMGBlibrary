@@ -9,7 +9,7 @@
         public bool IsPs3Imgb { get; set; }
         public bool IsX360Imgb { get; set; }
         #endregion
-
+        public bool IsType2Repack { get; set; } // True = Resize/Append, False = Strict/Overwrite
         #region GTEX variables
         public static readonly byte[] GtexImgFormatValues = new byte[] { 3, 4, 24, 25, 26 };  
         public static readonly byte[] GtexImgTypeValues = new byte[] { 0, 4, 1, 5, 2 };

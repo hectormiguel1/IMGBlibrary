@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+namespace IMGBlibrary.Extensions;
+
 internal static class BinaryReaderHelpers
 {
     public static ushort ReadBytesUInt16(this BinaryReader reader, bool isBigEndian)

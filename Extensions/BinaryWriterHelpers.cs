@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+namespace IMGBlibrary.Extensions;
+
 internal static class BinaryWriterHelpers
 {
     public static void WriteBytesUInt16(this BinaryWriter writerName, ushort valueToWrite, bool isBigEndian)

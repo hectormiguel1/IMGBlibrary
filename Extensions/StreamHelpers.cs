@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 
+namespace IMGBlibrary.Extensions;
+
 internal static class StreamHelpers
 {
     public static void ExCopyTo(this Stream source, Stream destination, long offset, long count, int bufferSize = 81920)

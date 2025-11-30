@@ -1,10 +1,11 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using IMGBlibrary.Extensions;
 
 namespace IMGBlibrary.Support
 {
-    internal class SharedMethods
+    internal static class SharedMethods
     {
         public static void DisplayLogMessage(string message, bool showMsg)
         {
@@ -43,34 +44,30 @@ namespace IMGBlibrary.Support
 
         public static void GetImageInfo(string inImgHeaderBlockFile, IMGBVariables imgbVars)
         {
-            using (var gtexStream = new FileStream(inImgHeaderBlockFile, FileMode.Open, FileAccess.Read))
+            using var gtexStream = new FileStream(inImgHeaderBlockFile, FileMode.Open, FileAccess.Read);
+            using var gtexReader = new BinaryReader(gtexStream);
+            gtexReader.BaseStream.Position = imgbVars.GtexStartVal + 6;
+            imgbVars.GtexImgFormatValue = gtexReader.ReadByte();
+            imgbVars.GtexImgMipCount = gtexReader.ReadByte();
+
+            imgbVars.GtexImgMipCount = imgbVars.GtexImgMipCount.Equals(0) ? (byte)1 : imgbVars.GtexImgMipCount;
+
+            gtexReader.BaseStream.Position = imgbVars.GtexStartVal + 9;
+            imgbVars.GtexImgTypeValue = gtexReader.ReadByte();
+            imgbVars.GtexImgWidth = gtexReader.ReadBytesUInt16(true);
+            imgbVars.GtexImgHeight = gtexReader.ReadBytesUInt16(true);
+            imgbVars.GtexImgDepth = gtexReader.ReadBytesUInt16(true);
+
+            switch (imgbVars.GtexImgTypeValue)
             {
-                using (var gtexReader = new BinaryReader(gtexStream))
-                {
-                    gtexReader.BaseStream.Position = imgbVars.GtexStartVal + 6;
-                    imgbVars.GtexImgFormatValue = gtexReader.ReadByte();
-                    imgbVars.GtexImgMipCount = gtexReader.ReadByte();
+                case 1:
+                case 5:
+                    imgbVars.GtexImgType = "_cbmap_";
+                    break;
 
-                    imgbVars.GtexImgMipCount = imgbVars.GtexImgMipCount.Equals(0) ? (byte)1 : imgbVars.GtexImgMipCount;
-
-                    gtexReader.BaseStream.Position = imgbVars.GtexStartVal + 9;
-                    imgbVars.GtexImgTypeValue = gtexReader.ReadByte();
-                    imgbVars.GtexImgWidth = gtexReader.ReadBytesUInt16(true);
-                    imgbVars.GtexImgHeight = gtexReader.ReadBytesUInt16(true);
-                    imgbVars.GtexImgDepth = gtexReader.ReadBytesUInt16(true);
-
-                    switch (imgbVars.GtexImgTypeValue)
-                    {
-                        case 1:
-                        case 5:
-                            imgbVars.GtexImgType = "_cbmap_";
-                            break;
-
-                        case 2:
-                            imgbVars.GtexImgType = "_stack_";
-                            break;
-                    }
-                }
+                case 2:
+                    imgbVars.GtexImgType = "_stack_";
+                    break;
             }
         }
 
