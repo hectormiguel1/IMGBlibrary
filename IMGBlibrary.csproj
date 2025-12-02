@@ -17,5 +17,10 @@
     <PackageReference Include="System.Text.Encoding.CodePages" Version="10.0.0" />
   </ItemGroup>
   
+  <ItemGroup>
+    <Compile Include="..\NativeLogger\**\*.cs"
+             LinkBase="NativeLogger" />
+  </ItemGroup>
+  
   
 </Project>

@@ -10,16 +10,19 @@
     #else
         #define IMGBLIB_API __declspec(dllimport)
     #endif
+    #define NATIVE_CDECL __cdecl
 #else
     #define IMGBLIB_API __attribute__((visibility("default")))
+    #define NATIVE_CDECL __cdecl
 #endif
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include "../../NativeLogger/native_logger.h"    
     
-    
-    typedef enum
+typedef enum
     {
         InvalidArgs = -1, 
         Success = 0, 
@@ -46,16 +49,11 @@ extern "C" {
         VTEX = 2
     } FileExtensions;
     
-    typedef unsigned char IMGB_BOOL;
-    
-    typedef void (*LogCallback)(const char * msg);
-    
-    IMGBLIB_API void set_logging_callback(LogCallback cb);
-    
-    IMGBLIB_API void free_log_memory(void* ptr);
-    
     //Unpack 
     IMGBLIB_API Status unpack_imgb(char* imgHeaderBlkPtr, char* inFilePtr, char* extractDirPtr, Platforms platform );
+    //Repack
+    IMGBLIB_API Status repack_imgb_strict(char* imgHeaderBlkPtr, char* outImgbPtr, char* extractedDirPtr, Platforms platform );
+    IMGBLIB_API Status repack_imgb_resize(char* tmpImgHeaderBlkPtr,char* imgHeaderBlkPtr, char* outImgbPtr, char* extractedDirPtr, Platforms platform );
     
     
 #ifdef __cplusplus

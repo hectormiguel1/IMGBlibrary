@@ -1,63 +1,27 @@
 using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using IMGBlibrary.Repack;
 using IMGBlibrary.Support;
 using IMGBlibrary.Unpack;
-using WhiteBinTools.Native;
+using Native;
 
 namespace IMGBlibrary.Native;
 
 public static class Exports
 {
-    const int InvalidArgsError = -1;
-    const int SuccessReturn = 0;
-    const int ExceptionError = 1;
+    private const int InvalidArgsError = -1;
+    private const int SuccessReturn = 0;
+    private const int ExceptionError = 1;
     
     [ModuleInitializer]
     public static void Init()
     {   
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+        NativeLogger.ModuleName = "IMGBLIB";
     }
     
-    [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-    private delegate void LoggerCallback(IntPtr msgPtr);
-    /// <summary>
-    /// Registers a callback function for logging.
-    /// C Signature: void set_logging_callback(void (*callback)(const char*));
-    /// </summary>
-    [UnmanagedCallersOnly(EntryPoint = "set_logging_callback", CallConvs = [typeof(CallConvCdecl)])]
-    public static void SetLoggingCallback(IntPtr callbackPtr)
-    {
-        if (callbackPtr == IntPtr.Zero)
-        {
-            NativeLogger.LoggingCallback = Console.WriteLine;
-            return;
-        }
-
-        var nativeCallback = Marshal.GetDelegateForFunctionPointer<LoggerCallback>(callbackPtr);
-
-        NativeLogger.LoggingCallback = (msg) =>
-        {
-            // ALLOCATE: Create a UTF-8 copy on the Heap (Unmanaged Memory).
-            // This memory persists until explicitly freed.
-            var ptr = Marshal.StringToCoTaskMemUTF8(msg);
-
-            // CALL: Pass the pointer to Caller. 
-            // Since it's heap memory, it's safe even if Caller processes it asynchronously.
-            nativeCallback(ptr);
-        };
-    }
     
-    // 3. The Cleanup Function (CRITICAL NEW EXPORT)
-    // Caller must call this after it reads the string.
-    [UnmanagedCallersOnly(EntryPoint = "free_log_memory", CallConvs = [typeof(CallConvCdecl)])]
-    public static void FreeLogMemory(IntPtr ptr)
-    {
-        if (ptr != IntPtr.Zero)
-        {
-            Marshal.FreeCoTaskMem(ptr);
-        }
-    }
 
     /// <summary>
     /// Native entry point for C ABI
@@ -93,7 +57,65 @@ public static class Exports
             NativeLogger.Error($"Failed to unpack {inFilePath} with error:{e.Message}");
             return ExceptionError;
         }
+    }
 
+    [UnmanagedCallersOnly(EntryPoint = "repack_imgb_strict", CallConvs = [typeof(CallConvCdecl)])]
+    public static int RepackStrict(IntPtr imgHeaderBlkPtr, IntPtr outImgbPtr, IntPtr extractedDirPtr, int platformRaw)
+    {
+        var imgHeaderBlk = Marshal.PtrToStringUTF8(imgHeaderBlkPtr);
+        var outImgb = Marshal.PtrToStringUTF8(outImgbPtr);
+        var extractedDir = Marshal.PtrToStringUTF8(extractedDirPtr);
+        var platform = (IMGBEnums.Platforms)platformRaw;
+        if (imgHeaderBlk == null || outImgb == null || extractedDir == null)
+        {
+            NativeLogger.Error("Either imgHeaderBlk, outImgb, extractedDir are null!" +
+                               $"imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
+            return InvalidArgsError;
+        }
+        NativeLogger.Debug($"Repacking IMGB in strict mode: imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
+
+        try
+        {
+            IMGBRepacker.Repack(imgHeaderBlk, outImgb, extractedDir, platform, IMGBRepacker.RepackMode.Strict, true);
+            NativeLogger.Info(
+                $"Successfully repacked IMGB imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}!");
+            return SuccessReturn;
+        }
+        catch (Exception e)
+        {
+            NativeLogger.Error($"Encountered error while repacking  imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            return ExceptionError;
+        }
+    }
+    
+    [UnmanagedCallersOnly(EntryPoint = "repack_imgb_resize", CallConvs = [typeof(CallConvCdecl)])]
+    public static int RepackResize(IntPtr tmpImgHeaderBlkPtr, IntPtr imgHeaderBlkPtr, IntPtr outImgbPtr, IntPtr extractedDirPtr, int platformRaw)
+    {
+        var tmpHeaderBlk = Marshal.PtrToStringUTF8(tmpImgHeaderBlkPtr);
+        var imgHeaderBlk = Marshal.PtrToStringUTF8(imgHeaderBlkPtr);
+        var outImgb = Marshal.PtrToStringUTF8(outImgbPtr);
+        var extractedDir = Marshal.PtrToStringUTF8(extractedDirPtr);
+        var platform = (IMGBEnums.Platforms)platformRaw;
+        if (tmpHeaderBlk == null || imgHeaderBlk == null || outImgb == null || extractedDir == null)
+        {
+            NativeLogger.Error("Either tmpHeaderBlk, imgHeaderBlk, outImgb, extractedDir are null!" +
+                               $"tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
+            return InvalidArgsError;
+        }
+        NativeLogger.Debug($"Repacking IMGB in strict mode: tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
+
+        try
+        {
+            IMGBRepacker.Repack(imgHeaderBlk, outImgb, extractedDir, platform, IMGBRepacker.RepackMode.Strict, true);
+            NativeLogger.Info(
+                $"Successfully repacked IMGB tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}!");
+            return SuccessReturn;
+        }
+        catch (Exception e)
+        {
+            NativeLogger.Error($"Encountered error while repacking  tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            return ExceptionError;
+        }
     }
 
 }
