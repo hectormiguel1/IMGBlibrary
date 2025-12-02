@@ -15,7 +15,7 @@ namespace IMGBlibrary.Repack
             IMGBEnums.Platforms platform, 
             RepackMode mode,
             bool showLog,
-            string ddsSearchName = null)
+            string? ddsSearchName = null)
         {
             
             var actualSearchName = ddsSearchName ?? Path.GetFileName(headerFile);
@@ -40,7 +40,7 @@ namespace IMGBlibrary.Repack
             using var imgbStream = new FileStream(outFile, fileMode, FileAccess.Write);
             using var gtexStream = new FileStream(headerFile, FileMode.Open, FileAccess.ReadWrite);
             // 3. Factory: Choose Strategy
-            RepackStrategy strategy = vars.GtexImgTypeValue switch
+            RepackStrategy? strategy = vars.GtexImgTypeValue switch
             {
                 0 or 4 => new ClassicRepacker(vars, imgbStream, gtexStream),
                 1 or 5 => new CubemapRepacker(vars, imgbStream, gtexStream),

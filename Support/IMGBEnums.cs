@@ -6,27 +6,6 @@
     public class IMGBEnums
     {
         /// <summary>
-        /// Use for determing the extension of the image header block file.
-        /// </summary>
-        public enum FileExtensions
-        {
-            /// <summary>
-            /// Present mainly in trb files
-            /// </summary>
-            txb,
-
-            /// <summary>
-            /// Present manily in xgr files
-            /// </summary>
-            txbh,
-
-            /// <summary>
-            /// Present mainly in xfv files
-            /// </summary>
-            vtex
-        }
-
-        /// <summary>
         /// Use for setting the platform of the image header block file.
         /// </summary>
         public enum Platforms

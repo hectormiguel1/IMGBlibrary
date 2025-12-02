@@ -43,7 +43,7 @@ namespace IMGBlibrary.Unpack
             using (var imgbStream = new FileStream(imgbFile, FileMode.Open, FileAccess.ReadWrite))
             using (var gtexStream = new FileStream(headerFile, FileMode.Open, FileAccess.Read))
             {
-                UnpackStrategy strategy = vars.GtexImgTypeValue switch
+                UnpackStrategy? strategy = vars.GtexImgTypeValue switch
                 {
                     0 or 4 => new ClassicUnpacker(vars, imgbStream, gtexStream),
                     1 or 5 => new CubemapUnpacker(vars, imgbStream, gtexStream),
