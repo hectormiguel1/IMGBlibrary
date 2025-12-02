@@ -39,6 +39,13 @@ extern "C" {
         X360 = 2
     } Platforms;
     
+    typedef enum
+    {
+        TXB = 0, 
+        TXBH = 1,
+        VTEX = 2
+    } FileExtensions;
+    
     typedef unsigned char IMGB_BOOL;
     
     typedef void (*LogCallback)(const char * msg);
