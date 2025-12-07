@@ -11,7 +11,7 @@ namespace IMGBlibrary.Unpack
             using var writer = new BinaryWriter(ddsStream, System.Text.Encoding.Default, leaveOpen: true);
             
             // Zero out header space (128 bytes)
-            for (int h = 0; h < 128; h++) ddsStream.WriteByte(0);
+            for (var h = 0; h < 128; h++) ddsStream.WriteByte(0);
 
             // 1. Base Header (Magic + Dimensions)
             writer.BaseStream.Position = 0;

@@ -20,7 +20,7 @@
 extern "C" {
 #endif
 
-#include "../../NativeLogger/native_logger.h"    
+#include "native_logger.h"    
     
 typedef enum
     {

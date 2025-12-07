@@ -18,7 +18,6 @@ public static class Exports
     public static void Init()
     {   
         System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-        NativeLogger.ModuleName = "IMGBLIB";
     }
     
     
@@ -41,20 +40,20 @@ public static class Exports
 
         if (imgHeaderBlk == null || inFilePath == null || extractDir == null)
         {
-            NativeLogger.Error("Either imgHeaderBlk, inFilePath, extractDir are null!" +
+            Log.Error("Either imgHeaderBlk, inFilePath, extractDir are null!" +
                                $"imgHeaderBlk: {imgHeaderBlk},  inFilePath: {inFilePath}, extractDir: {extractDir}, platform: {platform}");
             return InvalidArgsError;
         }
-        NativeLogger.Debug($"Unpacking imgb at inputPath: {inFilePath} to directory: {extractDir} platform: {platform}");
+        Log.Info($"Unpacking imgb at inputPath: {inFilePath} to directory: {extractDir} platform: {platform}");
         try
         {
             IMGBUnpacker.Unpack(imgHeaderBlk, inFilePath, extractDir, platform, true);
-            NativeLogger.Info($"Successfully unpacked imgb {inFilePath}!");
+            Log.Info($"Successfully unpacked imgb {inFilePath}!");
             return SuccessReturn;
         }
         catch (Exception e)
         {
-            NativeLogger.Error($"Failed to unpack {inFilePath} with error:{e.Message}");
+            Log.Error($"Failed to unpack {inFilePath} with error:{e.Message}");
             return ExceptionError;
         }
     }
@@ -68,22 +67,22 @@ public static class Exports
         var platform = (IMGBEnums.Platforms)platformRaw;
         if (imgHeaderBlk == null || outImgb == null || extractedDir == null)
         {
-            NativeLogger.Error("Either imgHeaderBlk, outImgb, extractedDir are null!" +
+            Log.Error("Either imgHeaderBlk, outImgb, extractedDir are null!" +
                                $"imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
             return InvalidArgsError;
         }
-        NativeLogger.Debug($"Repacking IMGB in strict mode: imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
+        Log.Info($"Repacking IMGB in strict mode: imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
 
         try
         {
             IMGBRepacker.Repack(imgHeaderBlk, outImgb, extractedDir, platform, IMGBRepacker.RepackMode.Strict, true);
-            NativeLogger.Info(
+            Log.Info(
                 $"Successfully repacked IMGB imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}!");
             return SuccessReturn;
         }
         catch (Exception e)
         {
-            NativeLogger.Error($"Encountered error while repacking  imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            Log.Error($"Encountered error while repacking  imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
             return ExceptionError;
         }
     }
@@ -98,22 +97,22 @@ public static class Exports
         var platform = (IMGBEnums.Platforms)platformRaw;
         if (tmpHeaderBlk == null || imgHeaderBlk == null || outImgb == null || extractedDir == null)
         {
-            NativeLogger.Error("Either tmpHeaderBlk, imgHeaderBlk, outImgb, extractedDir are null!" +
+            Log.Error("Either tmpHeaderBlk, imgHeaderBlk, outImgb, extractedDir are null!" +
                                $"tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
             return InvalidArgsError;
         }
-        NativeLogger.Debug($"Repacking IMGB in strict mode: tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
+        Log.Info($"Repacking IMGB in strict mode: tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir} platform: {platform}");
 
         try
         {
             IMGBRepacker.Repack(imgHeaderBlk, outImgb, extractedDir, platform, IMGBRepacker.RepackMode.Strict, true);
-            NativeLogger.Info(
+            Log.Info(
                 $"Successfully repacked IMGB tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}!");
             return SuccessReturn;
         }
         catch (Exception e)
         {
-            NativeLogger.Error($"Encountered error while repacking  tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            Log.Error($"Encountered error while repacking  tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
             return ExceptionError;
         }
     }

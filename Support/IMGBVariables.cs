@@ -11,8 +11,8 @@
         #endregion
         public bool IsType2Repack { get; set; } // True = Resize/Append, False = Strict/Overwrite
         #region GTEX variables
-        public static readonly byte[] GtexImgFormatValues = new byte[] { 3, 4, 24, 25, 26 };  
-        public static readonly byte[] GtexImgTypeValues = new byte[] { 0, 4, 1, 5, 2 };
+        public static readonly byte[] GtexImgFormatValues = [3, 4, 24, 25, 26];  
+        public static readonly byte[] GtexImgTypeValues = [0, 4, 1, 5, 2];
         public uint GtexStartVal { get; set; }
         public byte GtexImgFormatValue { get; set; }
         public byte GtexImgMipCount { get; set; }

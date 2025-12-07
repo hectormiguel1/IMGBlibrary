@@ -18,7 +18,7 @@ namespace IMGBlibrary.Unpack
 
             if (vars.GtexStartVal == 0)
             {
-                SharedMethods.DisplayLogMessage("Unable to find GTEX chunk. Skipped.", showLog);
+                Log.Warn("Unable to find GTEX chunk. Skipped.");
                 return;
             }
 
@@ -27,7 +27,7 @@ namespace IMGBlibrary.Unpack
             vars.IsPs3Imgb = (platform == IMGBEnums.Platforms.ps3);
             vars.IsX360Imgb = (platform == IMGBEnums.Platforms.x360);
 
-            if (vars.IsX360Imgb) SharedMethods.DisplayLogMessage("X360 platform: images will not be unswizzled.", showLog);
+            if (vars.IsX360Imgb) Log.Warn("X360 platform: images will not be unswizzled.");
 
             // Read Info & Validate
             SharedMethods.GetImageInfo(headerFile, vars);
@@ -35,36 +35,34 @@ namespace IMGBlibrary.Unpack
             if (!IMGBVariables.GtexImgFormatValues.Contains(vars.GtexImgFormatValue) || 
                 !IMGBVariables.GtexImgTypeValues.Contains(vars.GtexImgTypeValue))
             {
-                SharedMethods.DisplayLogMessage("Unknown Format or Type. Skipped.", showLog);
+                Log.Warn("Unknown Format or Type. Skipped.");
                 return;
             }
 
             // Execute Strategy
-            using (var imgbStream = new FileStream(imgbFile, FileMode.Open, FileAccess.ReadWrite))
-            using (var gtexStream = new FileStream(headerFile, FileMode.Open, FileAccess.Read))
+            using var imgbStream = new FileStream(imgbFile, FileMode.Open, FileAccess.ReadWrite);
+            using var gtexStream = new FileStream(headerFile, FileMode.Open, FileAccess.Read);
+            UnpackStrategy? strategy = vars.GtexImgTypeValue switch
             {
-                UnpackStrategy? strategy = vars.GtexImgTypeValue switch
-                {
-                    0 or 4 => new ClassicUnpacker(vars, imgbStream, gtexStream),
-                    1 or 5 => new CubemapUnpacker(vars, imgbStream, gtexStream),
-                    2 => new StackUnpacker(vars, imgbStream, gtexStream),
-                    _ => null
-                };
+                0 or 4 => new ClassicUnpacker(vars, imgbStream, gtexStream),
+                1 or 5 => new CubemapUnpacker(vars, imgbStream, gtexStream),
+                2 => new StackUnpacker(vars, imgbStream, gtexStream),
+                _ => null
+            };
 
-                if (strategy == null)
-                {
-                    SharedMethods.DisplayLogMessage("Unsupported Image Type", showLog);
-                    return;
-                }
-
-                if (vars.GtexImgTypeValue == 2 && vars.GtexImgMipCount > 1)
-                {
-                    SharedMethods.DisplayLogMessage("Stack images with > 1 Mip not supported.", showLog);
-                    return;
-                }
-
-                strategy.Execute(outDir);
+            if (strategy == null)
+            {
+                Log.Warn("Unsupported Image Type");
+                return;
             }
+
+            if (vars is { GtexImgTypeValue: 2, GtexImgMipCount: > 1 })
+            {
+                Log.Warn("Stack images with > 1 Mip not supported.");
+                return;
+            }
+
+            strategy.Execute(outDir);
         }
     }
 }

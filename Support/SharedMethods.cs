@@ -7,15 +7,6 @@ namespace IMGBlibrary.Support
 {
     internal static class SharedMethods
     {
-        public static void DisplayLogMessage(string message, bool showMsg)
-        {
-            if (showMsg)
-            {
-                Console.WriteLine(message);
-            }
-        }
-
-
         public static uint GetGTEXChunkPos(string inImgHeaderBlockFile)
         {
             uint gtexPos = 0;
@@ -23,19 +14,15 @@ namespace IMGBlibrary.Support
             var gtexChunkStringArray = new byte[4];
             var imgHeaderBlockFileData = File.ReadAllBytes(inImgHeaderBlockFile);
 
-            for (int g = 0; g < imgHeaderBlockFileData.Length; g++)
+            for (var g = 0; g < imgHeaderBlockFileData.Length; g++)
             {
-                if ((char)imgHeaderBlockFileData[g] == gtexChunkString[0])
-                {
-                    Buffer.BlockCopy(imgHeaderBlockFileData, g, gtexChunkStringArray, 0, 4);
-                    var gtex = Encoding.ASCII.GetString(gtexChunkStringArray, 0, 4);
+                if ((char)imgHeaderBlockFileData[g] != gtexChunkString[0]) continue;
+                Buffer.BlockCopy(imgHeaderBlockFileData, g, gtexChunkStringArray, 0, 4);
+                var gtex = Encoding.ASCII.GetString(gtexChunkStringArray, 0, 4);
 
-                    if (gtex == gtexChunkString)
-                    {
-                        gtexPos = (uint)g;
-                        break;
-                    }
-                }
+                if (gtex != gtexChunkString) continue;
+                gtexPos = (uint)g;
+                break;
             }
 
             return gtexPos;
@@ -58,17 +45,12 @@ namespace IMGBlibrary.Support
             imgbVars.GtexImgHeight = gtexReader.ReadBytesUInt16(true);
             imgbVars.GtexImgDepth = gtexReader.ReadBytesUInt16(true);
 
-            switch (imgbVars.GtexImgTypeValue)
+            imgbVars.GtexImgType = imgbVars.GtexImgTypeValue switch
             {
-                case 1:
-                case 5:
-                    imgbVars.GtexImgType = "_cbmap_";
-                    break;
-
-                case 2:
-                    imgbVars.GtexImgType = "_stack_";
-                    break;
-            }
+                1 or 5 => "_cbmap_",
+                2 => "_stack_",
+                _ => imgbVars.GtexImgType
+            };
         }
 
 
@@ -84,35 +66,14 @@ namespace IMGBlibrary.Support
             ddsReader.BaseStream.Position = 84;
             var imgFormatString = Encoding.ASCII.GetString(ddsReader.ReadBytes(4)).Replace("\0", "");
 
-            switch (imgFormatString)
+            imgbVars.OutImgFormatValue = imgFormatString switch
             {
-                case "":
-                    if (imgbVars.OutImgMipCount > 1)
-                    {
-                        imgbVars.OutImgFormatValue = 3;
-                    }
-                    else
-                    {
-                        imgbVars.OutImgFormatValue = 4;
-                    }
-                    break;
-
-                case "DXT1":
-                    imgbVars.OutImgFormatValue = 24;
-                    break;
-
-                case "DXT3":
-                    imgbVars.OutImgFormatValue = 25;
-                    break;
-
-                case "DXT5":
-                    imgbVars.OutImgFormatValue = 26;
-                    break;
-
-                default:
-                    imgbVars.OutImgFormatValue = 0;
-                    break;
-            }
+                "" => imgbVars.OutImgMipCount > 1 ? (byte)3 : (byte)4,
+                "DXT1" => 24,
+                "DXT3" => 25,
+                "DXT5" => 26,
+                _ => 0
+            };
         }
 
 
@@ -121,7 +82,7 @@ namespace IMGBlibrary.Support
             var isMissingAnImg = false;
             var imgFileCount = 1;
 
-            for (int i = 0; i < fileAmount; i++)
+            for (var i = 0; i < fileAmount; i++)
             {
                 var fileToCheck = Path.Combine(extractImgbDir, imgHeaderBlockFileName + imgbVars.GtexImgType + imgFileCount + ".dds");
 

@@ -14,7 +14,7 @@ namespace IMGBlibrary.Unpack.Strategy
 
             for (var i = 1; i <= 6; i++)
             {
-                string ddsPath = Path.Combine(extractDir, $"{_vars.ImgHeaderBlockFileName}{_vars.GtexImgType}{i}.dds");
+                var ddsPath = Path.Combine(extractDir, $"{_vars.ImgHeaderBlockFileName}{_vars.GtexImgType}{i}.dds");
 
                 CreateAndWriteDDS(ddsPath, (ddsStream) =>
                 {

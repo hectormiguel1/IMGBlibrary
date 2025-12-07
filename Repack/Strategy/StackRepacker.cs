@@ -76,7 +76,7 @@ namespace IMGBlibrary.Repack.Strategy
                      temp.ExCopyTo(_imgbStream, 0, size);
                  }
              }
-             SharedMethods.DisplayLogMessage($"Repacked {Path.GetFileName(path)}", _vars.ShowLog);
+             Log.Info($"Repacked {Path.GetFileName(path)}");
         }
 
         private void ProcessStackSliceType2(string path, int stackIndex)
@@ -124,14 +124,14 @@ namespace IMGBlibrary.Repack.Strategy
                     temp.ExCopyTo(_imgbStream, 0, temp.Length);
                 }
             }
-            SharedMethods.DisplayLogMessage($"Repacked {Path.GetFileName(path)}", _vars.ShowLog);
+            Log.Info($"Repacked {Path.GetFileName(path)}");
         }
 
         private bool CheckFiles(string dir)
         {
             var missing = SharedMethods.CheckImgFilesBatch(_vars.GtexImgDepth, dir, _vars.ImgHeaderBlockFileName, _vars);
             if (!missing) return true;
-            SharedMethods.DisplayLogMessage("Missing one or more stack image files.", _vars.ShowLog);
+            Log.Error("Missing one or more stack image files.");
             return false;
         }
     }

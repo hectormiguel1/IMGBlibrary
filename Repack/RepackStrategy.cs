@@ -30,7 +30,7 @@ namespace IMGBlibrary.Repack
         {
             if (!File.Exists(ddsPath))
             {
-                SharedMethods.DisplayLogMessage($"Missing file: {Path.GetFileName(ddsPath)}", _vars.ShowLog);
+                Log.Error($"Missing file: {Path.GetFileName(ddsPath)}");
                 return;
             }
 
@@ -113,7 +113,7 @@ namespace IMGBlibrary.Repack
                     }
                 }
             }
-            SharedMethods.DisplayLogMessage($"Repacked {Path.GetFileName(ddsPath)}", _vars.ShowLog);
+            Log.Info($"Repacked {Path.GetFileName(ddsPath)}");
         }
 
         protected virtual void UpdateGtexHeader()
@@ -205,7 +205,7 @@ namespace IMGBlibrary.Repack
             if (_vars.GtexImgMipCount == _vars.OutImgMipCount &&
                 _vars.GtexImgWidth == _vars.OutImgWidth &&
                 _vars.GtexImgHeight == _vars.OutImgHeight) return true;
-            SharedMethods.DisplayLogMessage("Mismatch in strict mode. Skipping.", _vars.ShowLog);
+            Log.Warn("Mismatch in strict mode. Skipping.");
             return false;
         }
     }

@@ -1,0 +1,13 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>43f5a634-79cb-4b5b-a1e7-d2dcc0b5b75a</SharedGUID>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" />
+  </ItemGroup>
+  
+  <Import Project="..\NativeLogger\NativeLogger.projitems" Label="Shared" />
+</Project>
