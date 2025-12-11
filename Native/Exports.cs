@@ -40,7 +40,7 @@ public static class Exports
 
         if (imgHeaderBlk == null || inFilePath == null || extractDir == null)
         {
-            Log.Error("Either imgHeaderBlk, inFilePath, extractDir are null!" +
+            Log.Fatal("Either imgHeaderBlk, inFilePath, extractDir are null!" +
                                $"imgHeaderBlk: {imgHeaderBlk},  inFilePath: {inFilePath}, extractDir: {extractDir}, platform: {platform}");
             return InvalidArgsError;
         }
@@ -53,7 +53,7 @@ public static class Exports
         }
         catch (Exception e)
         {
-            Log.Error($"Failed to unpack {inFilePath} with error:{e.Message}");
+            Log.Fatal($"Failed to unpack {inFilePath} with error:{e.Message}");
             return ExceptionError;
         }
     }
@@ -67,7 +67,7 @@ public static class Exports
         var platform = (IMGBEnums.Platforms)platformRaw;
         if (imgHeaderBlk == null || outImgb == null || extractedDir == null)
         {
-            Log.Error("Either imgHeaderBlk, outImgb, extractedDir are null!" +
+            Log.Fatal("Either imgHeaderBlk, outImgb, extractedDir are null!" +
                                $"imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
             return InvalidArgsError;
         }
@@ -82,7 +82,7 @@ public static class Exports
         }
         catch (Exception e)
         {
-            Log.Error($"Encountered error while repacking  imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            Log.Fatal($"Encountered error while repacking  imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
             return ExceptionError;
         }
     }
@@ -97,7 +97,7 @@ public static class Exports
         var platform = (IMGBEnums.Platforms)platformRaw;
         if (tmpHeaderBlk == null || imgHeaderBlk == null || outImgb == null || extractedDir == null)
         {
-            Log.Error("Either tmpHeaderBlk, imgHeaderBlk, outImgb, extractedDir are null!" +
+            Log.Fatal("Either tmpHeaderBlk, imgHeaderBlk, outImgb, extractedDir are null!" +
                                $"tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk},  outImgb: {outImgb}, extractedDir: {extractedDir}, platform: {platform}");
             return InvalidArgsError;
         }
@@ -112,7 +112,7 @@ public static class Exports
         }
         catch (Exception e)
         {
-            Log.Error($"Encountered error while repacking  tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
+            Log.Fatal($"Encountered error while repacking  tmpHeaderBlk: {tmpHeaderBlk}, imgHeaderBlk: {imgHeaderBlk}, output imgb: {outImgb} source directory: {extractedDir}. Error: {e.Message}");
             return ExceptionError;
         }
     }

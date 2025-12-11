@@ -25,7 +25,7 @@ namespace IMGBlibrary.Unpack
                 // 2. Write Mip Data (Delegated to concrete class logic)
                 writeMipsAction(ddsStream);
             }
-            Log.Debug($"Unpacked {Path.GetFileName(ddsPath)}");
+            Log.Fine($"Unpacked {Path.GetFileName(ddsPath)}");
         }
 
         protected void CopyMipToDDS(Stream ddsStream, uint mipStart, uint mipSize)

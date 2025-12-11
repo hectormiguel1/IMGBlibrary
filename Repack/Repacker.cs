@@ -50,7 +50,7 @@ namespace IMGBlibrary.Repack
 
             if (strategy == null)
             {
-                Log.Warn("Unsupported Image Type");
+                Log.Warning("Unsupported Image Type");
                 return;
             }
 

@@ -10,7 +10,7 @@ namespace IMGBlibrary.Support
         public static uint GetGTEXChunkPos(string inImgHeaderBlockFile)
         {
             uint gtexPos = 0;
-            var gtexChunkString = "GTEX";
+            const string gtexChunkString = "GTEX";
             var gtexChunkStringArray = new byte[4];
             var imgHeaderBlockFileData = File.ReadAllBytes(inImgHeaderBlockFile);
 

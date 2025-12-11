@@ -15,7 +15,7 @@ namespace IMGBlibrary.Repack
             vars.GtexStartVal = SharedMethods.GetGTEXChunkPos(imgHeaderBlockFile);
             if (vars.GtexStartVal == 0)
             {
-                Log.Warn("Unable to find GTEX chunk. Skipped.");
+                Log.Warning("Unable to find GTEX chunk. Skipped.");
                 return false;
             }
 
@@ -25,19 +25,19 @@ namespace IMGBlibrary.Repack
             // 3. Validate Format and Type
             if (!IMGBVariables.GtexImgFormatValues.Contains(vars.GtexImgFormatValue))
             {
-                Log.Warn("Detected unknown image format. Skipped.");
+                Log.Warning("Detected unknown image format. Skipped.");
                 return false;
             }
 
             if (!IMGBVariables.GtexImgTypeValues.Contains(vars.GtexImgTypeValue))
             {
-                Log.Warn("Detected unknown image type. Skipped.");
+                Log.Warning("Detected unknown image type. Skipped.");
                 return false;
             }
 
             // 4. Check Platform Support (Repack only supports Win32 currently)
             if (platform is not (IMGBEnums.Platforms.ps3 or IMGBEnums.Platforms.x360)) return true;
-            Log.Error($"Detected {platform} version. Repacking is not supported.");
+            Log.Fatal($"Detected {platform} version. Repacking is not supported.");
             return false;
 
         }

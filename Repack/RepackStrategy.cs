@@ -30,7 +30,7 @@ namespace IMGBlibrary.Repack
         {
             if (!File.Exists(ddsPath))
             {
-                Log.Error($"Missing file: {Path.GetFileName(ddsPath)}");
+                Log.Fatal($"Missing file: {Path.GetFileName(ddsPath)}");
                 return;
             }
 
@@ -205,7 +205,7 @@ namespace IMGBlibrary.Repack
             if (_vars.GtexImgMipCount == _vars.OutImgMipCount &&
                 _vars.GtexImgWidth == _vars.OutImgWidth &&
                 _vars.GtexImgHeight == _vars.OutImgHeight) return true;
-            Log.Warn("Mismatch in strict mode. Skipping.");
+            Log.Warning("Mismatch in strict mode. Skipping.");
             return false;
         }
     }

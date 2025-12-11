@@ -131,7 +131,7 @@ namespace IMGBlibrary.Repack.Strategy
         {
             var missing = SharedMethods.CheckImgFilesBatch(_vars.GtexImgDepth, dir, _vars.ImgHeaderBlockFileName, _vars);
             if (!missing) return true;
-            Log.Error("Missing one or more stack image files.");
+            Log.Fatal("Missing one or more stack image files.");
             return false;
         }
     }

@@ -18,7 +18,7 @@ namespace IMGBlibrary.Unpack
 
             if (vars.GtexStartVal == 0)
             {
-                Log.Warn("Unable to find GTEX chunk. Skipped.");
+                Log.Warning("Unable to find GTEX chunk. Skipped.");
                 return;
             }
 
@@ -27,7 +27,7 @@ namespace IMGBlibrary.Unpack
             vars.IsPs3Imgb = (platform == IMGBEnums.Platforms.ps3);
             vars.IsX360Imgb = (platform == IMGBEnums.Platforms.x360);
 
-            if (vars.IsX360Imgb) Log.Warn("X360 platform: images will not be unswizzled.");
+            if (vars.IsX360Imgb) Log.Warning("X360 platform: images will not be unswizzled.");
 
             // Read Info & Validate
             SharedMethods.GetImageInfo(headerFile, vars);
@@ -35,7 +35,7 @@ namespace IMGBlibrary.Unpack
             if (!IMGBVariables.GtexImgFormatValues.Contains(vars.GtexImgFormatValue) || 
                 !IMGBVariables.GtexImgTypeValues.Contains(vars.GtexImgTypeValue))
             {
-                Log.Warn("Unknown Format or Type. Skipped.");
+                Log.Warning("Unknown Format or Type. Skipped.");
                 return;
             }
 
@@ -52,13 +52,13 @@ namespace IMGBlibrary.Unpack
 
             if (strategy == null)
             {
-                Log.Warn("Unsupported Image Type");
+                Log.Warning("Unsupported Image Type");
                 return;
             }
 
             if (vars is { GtexImgTypeValue: 2, GtexImgMipCount: > 1 })
             {
-                Log.Warn("Stack images with > 1 Mip not supported.");
+                Log.Warning("Stack images with > 1 Mip not supported.");
                 return;
             }
 

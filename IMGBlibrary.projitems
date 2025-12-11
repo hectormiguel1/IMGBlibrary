@@ -9,5 +9,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)**\*.cs" />
   </ItemGroup>
   
-  <Import Project="..\NativeLogger\NativeLogger.projitems" Label="Shared" />
+  <Import Project="..\NativeCommons\NativeCommons.projitems" Label="Shared" />
 </Project>
